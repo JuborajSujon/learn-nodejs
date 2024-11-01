@@ -1,3 +1,11 @@
-const {ageCal} = require('./function.js')
+const fs = require('fs')
 
-console.log(ageCal("Sujon", 1990))
+
+// async funcion for write file 
+fs.writeFile("data.txt", "Hi Node, You are awesome", (err, data) => {
+  console.log(err , data)
+})
+
+
+// sync funcion for write file 
+fs.writeFileSync('data2.txt', "Hello data file 2")

@@ -17,9 +17,13 @@ const fs = require(fs)
 ```
 - now create any file with data write
 ```js
+// async function
 fs.writeFile('file_name','set_data',(errors, data)=>{
 
 })
+
+// sync function
+fs.writeFileSync('file_name','set_data')
 ```
 - now rename any file name 
 ```js
