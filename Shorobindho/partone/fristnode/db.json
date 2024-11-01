@@ -1,0 +1,19 @@
+{
+  "devs":[
+    {
+      "id":1,
+      "name": "asraf",
+      "skill": "IOS"
+    },
+    {
+      "id":2,
+      "name": "sujon",
+      "skill": "anroid"
+    },
+    {
+      "id":3,
+      "name": "jamal",
+      "skill": "iphone"
+    }
+  ]
+}
