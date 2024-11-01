@@ -1,4 +1,4 @@
-import { writeFile, writeFileSync, appendFile, appendFileSync,readFileSync } from "fs";
+import { writeFile, writeFileSync, appendFile, appendFileSync,readFileSync, readFile } from "fs";
 
 
 // async funcion for write file 
@@ -17,3 +17,8 @@ appendFile("data2.txt", "\nWe are devs", (err, data) => { })
 // sync function 
 const data = readFileSync('./db.json')
 console.log(data.toString())
+
+// async function 
+readFile("./index.html", (err, data) => {
+  console.log(data.toString())
+})
