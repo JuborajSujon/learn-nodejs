@@ -8,3 +8,8 @@ console.log(result);
 console.log("result2", result2);
 console.log(a)
 console.log("a2", a2)
+
+//buil-in-module
+const path = require('path');
+
+console.log(path.parse("E:/Node JS/Github File/Programming Hero/module7/local-1.js"))
