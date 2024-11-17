@@ -8,8 +8,10 @@ const app: Application = express();
 app.use(express.json());
 app.use(cors());
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!');
-});
+const getHomeController = (req: Request, res: Response) => {
+  res.send('Home Router');
+};
+
+app.get('/', getHomeController);
 
 export default app;
