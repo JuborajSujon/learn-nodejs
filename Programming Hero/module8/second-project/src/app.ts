@@ -9,11 +9,13 @@ const app: Application = express();
 app.use(express.json());
 app.use(cors());
 
-//Application routes
-app.use('/api/v1/student', StudentRoutes);
+//Appication routes
+app.use('/api/v1/students', StudentRoutes);
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!');
-});
+const getHomeController = (req: Request, res: Response) => {
+  res.send('Home Router');
+};
+
+app.get('/', getHomeController);
 
 export default app;
