@@ -1,19 +1,46 @@
 {
-  "devs":[
+  "devs": [
     {
-      "id":1,
+      "id": 1,
       "name": "asraf",
       "skill": "IOS"
     },
     {
-      "id":2,
+      "id": 2,
       "name": "sujon",
       "skill": "anroid"
     },
     {
-      "id":3,
+      "id": 3,
       "name": "jamal",
       "skill": "iphone"
     }
-  ]
+  ],
+  "posts": [
+    {
+      "id": 1,
+      "title": "post 1",
+      "body": "body of post 1"
+    },
+    {
+      "id": 2,
+      "title": "post 2",
+      "body": "body of post 2"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "body of comment 1",
+      "postId": 1
+    },
+    {
+      "id": 2,
+      "body": "body of comment 2",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
 }

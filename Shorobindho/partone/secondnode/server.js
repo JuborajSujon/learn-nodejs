@@ -1,7 +1,12 @@
 import http from "http";
+import dotenv from "dotenv";
 import fs from "fs";
 
-let page = fs.readFileSync("./db.json", "utf-8");
+//enviroment init
+dotenv.config();
+const PORT = process.env.PORT;
+
+let page = fs.readFileSync("./data/students.json", "utf-8");
 
 http
   .createServer((req, res) => {

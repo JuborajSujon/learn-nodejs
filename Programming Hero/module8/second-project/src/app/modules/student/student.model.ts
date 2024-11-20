@@ -5,6 +5,7 @@ import {
   Student,
   UserName,
 } from './student.interface';
+import validator from 'validator';
 
 const userNameSchema = new Schema<UserName>({
   firstName: {
@@ -26,6 +27,10 @@ const userNameSchema = new Schema<UserName>({
     maxlength: [20, 'Last name is too long, not more than 20 characters'],
     trim: true,
     require: [true, 'Last name is required'],
+    validate: {
+      validator: (value: string) => validator.isAlpha(value),
+      message: '{VALUE} is not a valid last name',
+    },
   },
 });
 
@@ -79,7 +84,15 @@ const studentSchema = new Schema<Student>({
     required: true,
   },
   dateOfBirth: { type: String },
-  email: { type: String, required: [true, 'Email is required'], unique: true },
+  email: {
+    type: String,
+    required: [true, 'Email is required'],
+    unique: true,
+    validate: {
+      validator: (value: string) => validator.isEmail(value),
+      message: '{VALUE} is not a valid email',
+    },
+  },
   contactNo: { type: String, required: [true, 'Contact no is required'] },
   emergencyContactNo: {
     type: String,
