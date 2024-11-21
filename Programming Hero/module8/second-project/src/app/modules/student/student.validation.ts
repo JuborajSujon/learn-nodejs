@@ -83,6 +83,7 @@ const studentValidationSchema = z.object({
       }),
     })
     .default('active'),
+  isDeleted: z.boolean().default(false),
 });
 
 // Export the Zod schema
