@@ -72,78 +72,83 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
   address: { type: String, require: [true, 'Guardian address is required'] },
 });
 
-const studentSchema = new Schema<TStudent, StudentModel>({
-  id: { type: String, required: true, unique: true },
-  password: {
-    type: String,
-    required: [true, 'Password is required'],
-    unique: true,
-    maxlength: [20, 'Password is too long, not more than 20 characters'],
-  },
-  name: {
-    type: userNameSchema,
-    required: [true, 'Name is required'],
-  },
-  gender: {
-    type: String,
-    enum: {
-      values: ['male', 'female', 'other'],
-      message:
-        "The gender field can only be one of the following values: 'male', 'female', 'other'.",
+const studentSchema = new Schema<TStudent, StudentModel>(
+  {
+    id: { type: String, required: true, unique: true },
+    password: {
+      type: String,
+      required: [true, 'Password is required'],
+      maxlength: [20, 'Password is too long, not more than 20 characters'],
     },
-    required: true,
-  },
-  dateOfBirth: { type: String },
-  email: {
-    type: String,
-    required: [true, 'Email is required'],
-    unique: true,
-    validate: {
-      validator: (value: string) => validator.isEmail(value),
-      message: '{VALUE} is not a valid email',
+    name: {
+      type: userNameSchema,
+      required: [true, 'Name is required'],
     },
-  },
-  contactNo: { type: String, required: [true, 'Contact no is required'] },
-  emergencyContactNo: {
-    type: String,
-    required: [true, 'Emergency contact no is required'],
-  },
-  bloodGroup: {
-    type: String,
-    enum: {
-      values: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
-      message:
-        "The bloodGroup field can only be one of the following values: 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'.",
+    gender: {
+      type: String,
+      enum: {
+        values: ['male', 'female', 'other'],
+        message:
+          "The gender field can only be one of the following values: 'male', 'female', 'other'.",
+      },
+      required: true,
     },
-    required: true,
-  },
-  presentAddress: {
-    type: String,
-    required: [true, 'Present address is required'],
-  },
-  permanentAddress: {
-    type: String,
-    required: [true, 'Permanent address is required'],
-  },
-  guardian: {
-    type: guardianSchema,
-    required: [true, 'Guardian is required'],
-  },
-  localGuardian: {
-    type: localGuardianSchema,
-    required: [true, 'Local guardian is required'],
-  },
-  profileImg: { type: String },
-  isActive: {
-    type: String,
-    enum: {
-      values: ['active', 'blocked'],
-      message:
-        "The isActive field can only be one of the following values: 'active', 'blocked'.",
+    dateOfBirth: { type: String },
+    email: {
+      type: String,
+      required: [true, 'Email is required'],
+      unique: true,
+      validate: {
+        validator: (value: string) => validator.isEmail(value),
+        message: '{VALUE} is not a valid email',
+      },
     },
-    default: 'active',
+    contactNo: { type: String, required: [true, 'Contact no is required'] },
+    emergencyContactNo: {
+      type: String,
+      required: [true, 'Emergency contact no is required'],
+    },
+    bloodGroup: {
+      type: String,
+      enum: {
+        values: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+        message:
+          "The bloodGroup field can only be one of the following values: 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'.",
+      },
+      required: true,
+    },
+    presentAddress: {
+      type: String,
+      required: [true, 'Present address is required'],
+    },
+    permanentAddress: {
+      type: String,
+      required: [true, 'Permanent address is required'],
+    },
+    guardian: {
+      type: guardianSchema,
+      required: [true, 'Guardian is required'],
+    },
+    localGuardian: {
+      type: localGuardianSchema,
+      required: [true, 'Local guardian is required'],
+    },
+    profileImg: { type: String },
+    isActive: {
+      type: String,
+      enum: {
+        values: ['active', 'blocked'],
+        message:
+          "The isActive field can only be one of the following values: 'active', 'blocked'.",
+      },
+      default: 'active',
+    },
+    isDeleted: { type: Boolean, default: false },
   },
-});
+  {
+    toJSON: { virtuals: true },
+  },
+);
 
 // pre save middleware / hooks : will work on create() and save()
 studentSchema.pre('save', async function (next) {
@@ -161,8 +166,37 @@ studentSchema.pre('save', async function (next) {
 });
 
 // post save middleware / hooks
-studentSchema.post('save', function () {
-  console.log(this, 'post hook: we saved our data');
+studentSchema.post('save', function (doc, next) {
+  // console.log(this, 'post hook: we saved our data');
+
+  // after the save password will be removed
+  doc.password = '';
+
+  next();
+});
+
+// Query middleware
+studentSchema.pre('find', function (next) {
+  // console.log(this, 'pre hook: we will find the data');
+
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+studentSchema.pre('findOne', function (next) {
+  // console.log(this, 'pre hook: we will find the data');
+
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+// [{ $match: { isDeleted: { $ne: true } },  { '$match': { id: 'S55437' } }}]
+
+studentSchema.pre('aggregate', function (next) {
+  // console.log(this, 'pre hook: we will find the data');
+
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
 });
 
 //creating a custom static method
@@ -177,4 +211,8 @@ studentSchema.statics.isUserExists = async function (id: string) {
 //   return existingUser;
 // };
 
+// virtual property
+studentSchema.virtual('fullName').get(function () {
+  return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`;
+});
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);
