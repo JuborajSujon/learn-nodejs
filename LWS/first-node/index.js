@@ -5,11 +5,11 @@ class MyEmitter extends EventEmitter {}
 const emitter = new MyEmitter();
 
 // listen for an event
-emitter.on("bellRing", () => {
-  console.log("Ring ring ring");
+emitter.on("bellRing", (period) => {
+  console.log("Ring ring ring, " + period + " third period will start soon");
 });
 // raise an event
 
 setTimeout(() => {
-  emitter.emit("bellRing");
+  emitter.emit("bellRing", "second period ended");
 }, 3000);
