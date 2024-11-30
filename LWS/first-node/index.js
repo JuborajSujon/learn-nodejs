@@ -13,13 +13,11 @@ class MyEmitter extends eventEmitter {
 const emitter = new MyEmitter();
 
 // register event handler
-emitter.on("start", function (a, b) {
-  console.log("start event fired");
-  console.log(a + b);
-  console.log(this.get());
-  console.log(this.set());
-  console.log(this.get());
-  console.log(this.value + this.get());
+emitter.on("start", (a, b) => {
+  console.log("start event", this);
+  setTimeout(() => {
+    console.log("After 3 seconds", a, b);
+  }, 3000);
 });
 
 // fire event
