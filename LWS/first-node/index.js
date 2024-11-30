@@ -1,15 +1,30 @@
-const EventEmitter = require("node:events");
+const eventEmitter = require("events");
 
-class MyEmitter extends EventEmitter {}
+class MyEmitter extends eventEmitter {
+  value = "Hello";
+
+  set(value) {
+    this.value = value;
+  }
+
+  get() {
+    return this.value;
+  }
+
+  constructor() {
+    super();
+  }
+}
 
 const emitter = new MyEmitter();
 
-// listen for an event
-emitter.on("bellRing", (period) => {
-  console.log("Ring ring ring, " + period + " third period will start soon");
+// Register a listener
+emitter.on("start", function (a, b) {
+  console.log(a, b, this, this === emitter);
+  console.log(this.get());
+  this.set("World");
+  console.log(this.get());
 });
-// raise an event
 
-setTimeout(() => {
-  emitter.emit("bellRing", "second period ended");
-}, 3000);
+// Emit an event
+emitter.emit("start", 1, 2);
