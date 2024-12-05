@@ -1,18 +1,39 @@
-const eventEmitter = require("events");
+const EventEmitter = require("events");
 
-class MyEmitter extends eventEmitter {}
+class MyEmitter extends EventEmitter {
+  sTime = "7:00 AM";
+  eTime = "8:00 AM";
+  startTime() {
+    console.log(`It has started ${this.sTime}`);
+  }
+  endTime() {
+    console.log(`Arriaval Time ${this.eTime}`);
+  }
+}
 
-const emitter = new MyEmitter();
+const myEmitter = new MyEmitter();
 
-let m = 0;
-
-// register event handler
-emitter.once("start", () => {
-  console.log(++m);
+myEmitter.on("event", function (a, b) {
+  console.log("an event occurred!");
+  console.log(a, b, this);
 });
 
-// first event handler
-emitter.emit("start");
+myEmitter.on("start", function () {
+  this.startTime();
 
-// second event handler
-emitter.emit("start");
+  setImmediate(() => {
+    console.log("This happens asynchronously");
+  });
+
+  this.endTime();
+});
+
+myEmitter.once("wakeup", () => {
+  console.log("I wake up moring at 7 AM");
+});
+
+// myEmitter.emit("start");
+// myEmitter.emit("event", 1, 2);
+
+myEmitter.emit("wakeup");
+myEmitter.emit("wakeup");
