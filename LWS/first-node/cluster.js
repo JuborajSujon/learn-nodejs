@@ -14,13 +14,19 @@
 const cluster = require("node:cluster");
 const http = require("node:http");
 const OS = require("node:os");
+const process = require("node:process");
 
-console.log(OS.cpus().length);
+const numCPUs = OS.cpus().length;
 
 if (cluster.isMaster) {
   console.log(`Master process ${process.pid} is running`);
-  cluster.fork();
-  cluster.fork();
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+
+  cluster.on("exit", (worker, code, signal) => {
+    console.log(`worker ${worker.process.pid} died`);
+  });
 } else {
   console.log(`Worker ${process.pid} started`);
   const server = http.createServer((req, res) => {
